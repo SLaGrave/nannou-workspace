@@ -1757,6 +1757,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "schotter3"
+version = "0.1.0"
+dependencies = [
+ "nannou",
+]
+
+[[package]]
 name = "scoped-tls"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

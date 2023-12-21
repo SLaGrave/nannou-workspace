@@ -2,5 +2,6 @@
 members=[
     "sidwellr-schotter/schotter1",
     "sidwellr-schotter/schotter2",
+    "sidwellr-schotter/schotter3",
 ]
 resolver="2"
