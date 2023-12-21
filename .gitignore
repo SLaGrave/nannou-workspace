@@ -4,6 +4,7 @@
 # Output images
 images/*.png
 images/*.gif
+images/schotter4_frames/
 
 # Keep specific files for README
 !images/schotter4.gif
