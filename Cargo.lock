@@ -176,6 +176,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "catpuccin-schotter"
+version = "0.1.0"
+dependencies = [
+ "nannou",
+ "nannou_egui",
+]
+
+[[package]]
 name = "cc"
 version = "1.0.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
