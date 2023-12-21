@@ -1,6 +1,7 @@
 use nannou::prelude::*;
 use nannou::rand::rngs::StdRng;
 use nannou::rand::{Rng, SeedableRng};
+use nannou_egui::{self, egui, Egui};
 
 const ROWS: u32 = 22;
 const COLS: u32 = 12;
@@ -41,6 +42,8 @@ impl Stone {
 }
 
 struct Model {
+    main_window: WindowId,
+    ui: Egui,
     random_seed: u64,
     disp_adj: f32,
     rot_adj: f32,
@@ -48,7 +51,7 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-    let _window = app
+    let main_window = app
         .new_window()
         .title(app.exe_name().unwrap())
         .size(WIDTH, HEIGHT)
@@ -56,6 +59,18 @@ fn model(app: &App) -> Model {
         .key_pressed(key_pressed)
         .build()
         .unwrap();
+
+    let ui_window = app
+        .new_window()
+        .title(app.exe_name().unwrap() + " controls")
+        .size(280, 130)
+        .view(ui_view)
+        .raw_event(raw_ui_event)
+        .key_pressed(key_pressed)
+        .build()
+        .unwrap();
+    let ui_window_ref = app.window(ui_window).unwrap();
+    let ui = Egui::from_window(&ui_window_ref);
 
     let random_seed = random_range(0, 1000000);
     let disp_adj = 1.0;
@@ -70,6 +85,8 @@ fn model(app: &App) -> Model {
     }
 
     Model {
+        main_window,
+        ui,
         random_seed,
         disp_adj,
         rot_adj,
@@ -78,6 +95,7 @@ fn model(app: &App) -> Model {
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
+    update_ui(model);
     let mut rng = StdRng::seed_from_u64(model.random_seed);
     for stone in &mut model.gravel {
         let factor = stone.y / ROWS as f32;
@@ -118,10 +136,12 @@ fn key_pressed(app: &App, model: &mut Model, key: Key) {
         Key::R => {
             model.random_seed = random_range(0, 1000000);
         }
-        Key::S => {
-            app.main_window()
-                .capture_frame(format!("images/{}.png", app.exe_name().unwrap()));
-        }
+        Key::S => match app.window(model.main_window) {
+            Some(window) => {
+                window.capture_frame(format!("images/{}.png", app.exe_name().unwrap()));
+            }
+            None => {}
+        },
         Key::Up => {
             model.disp_adj += 0.1;
         }
@@ -140,4 +160,30 @@ fn key_pressed(app: &App, model: &mut Model, key: Key) {
         }
         _other_key => {}
     }
+}
+
+fn ui_view(_app: &App, model: &Model, frame: Frame) {
+    model.ui.draw_to_frame(&frame).unwrap();
+}
+
+fn raw_ui_event(_app: &App, model: &mut Model, event: &nannou::winit::event::WindowEvent) {
+    model.ui.handle_raw_event(event);
+}
+
+fn update_ui(model: &mut Model) {
+    let ctx = model.ui.begin_frame();
+    egui::Window::new("Schotter Control Panel")
+        .collapsible(false)
+        .show(&ctx, |ui| {
+            ui.add(egui::Slider::new(&mut model.disp_adj, 0.0..=5.0).text("Displacement"));
+            ui.add(egui::Slider::new(&mut model.rot_adj, 0.0..=5.0).text("Rotation"));
+            ui.horizontal(|ui| {
+                if ui.add(egui::Button::new("Randomize")).clicked() {
+                    model.random_seed = random_range(0, 1000000);
+                }
+                ui.add_space(20.0);
+                ui.add(egui::DragValue::new(&mut model.random_seed));
+                ui.label("Seed");
+            })
+        });
 }
