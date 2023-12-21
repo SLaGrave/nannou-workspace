@@ -1,6 +1,6 @@
 [workspace]
 members=[
-    "schotter1",
-    "schotter2",
+    "sidwellr-schotter/schotter1",
+    "sidwellr-schotter/schotter2",
 ]
 resolver="2"
