@@ -3,8 +3,13 @@ use nannou::rand::rngs::StdRng;
 use nannou::rand::{Rng, SeedableRng};
 use nannou_egui::{self, egui, Egui};
 
-const ROWS: u32 = 22;
-const COLS: u32 = 12;
+mod stone;
+use stone::Stone;
+
+mod catppuccin;
+
+const ROWS: u32 = 25;
+const COLS: u32 = 25;
 const SIZE: u32 = 30;
 const MARGIN: u32 = 35;
 const WIDTH: u32 = COLS * SIZE + 2 * MARGIN;
@@ -16,29 +21,6 @@ fn main() {
         .update(update)
         .loop_mode(LoopMode::wait())
         .run();
-}
-
-struct Stone {
-    x: f32,
-    y: f32,
-    x_offset: f32,
-    y_offset: f32,
-    rotation: f32,
-}
-
-impl Stone {
-    fn new(x: f32, y: f32) -> Self {
-        let x_offset = 0.0;
-        let y_offset = 0.0;
-        let rotation = 0.0;
-        Stone {
-            x,
-            y,
-            x_offset,
-            y_offset,
-            rotation,
-        }
-    }
 }
 
 struct Model {
@@ -98,11 +80,13 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
     update_ui(model);
     let mut rng = StdRng::seed_from_u64(model.random_seed);
     for stone in &mut model.gravel {
-        let factor = stone.y / ROWS as f32;
-        let disp_factor = factor * model.disp_adj;
-        let rot_factor = factor * model.rot_adj;
-        stone.x_offset = disp_factor * rng.gen_range(-0.5..0.5);
-        stone.y_offset = disp_factor * rng.gen_range(-0.5..0.5);
+        let factor_y = stone.y / ROWS as f32;
+        let factor_x = stone.x / COLS as f32;
+        let disp_factor_x = factor_x * model.disp_adj;
+        let disp_factor_y = factor_y * model.disp_adj;
+        let rot_factor = (factor_y + factor_x) / 2.0 * model.rot_adj;
+        stone.x_offset = disp_factor_x * rng.gen_range(-0.5..0.5);
+        stone.y_offset = disp_factor_y * rng.gen_range(-0.5..0.5);
         stone.rotation = rot_factor * rng.gen_range(-PI / 4.0..PI / 4.0);
     }
 }
@@ -114,14 +98,14 @@ fn view(app: &App, model: &Model, frame: Frame) {
         .scale_y(-1.0)
         .x_y(COLS as f32 / -2.0 + 0.5, ROWS as f32 / -2.0 + 0.5);
 
-    draw.background().color(SNOW);
+    draw.background().color(catppuccin::BASE);
 
     for stone in &model.gravel {
         let cdraw = gdraw.x_y(stone.x, stone.y);
         cdraw
             .rect()
             .no_fill()
-            .stroke(BLACK)
+            .stroke(stone.color)
             .stroke_weight(LINE_WIDTH)
             .w_h(1.0, 1.0)
             .x_y(stone.x_offset, stone.y_offset)

@@ -1,5 +1,5 @@
 [package]
-name = "catpuccin-schotter"
+name = "catppuccin-schotter"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 nannou = "0.18.1"           # A Creative Coding Framework for Rust.
 nannou_egui = "0.5.0"       # egui integration for nannou
+rand = "0.8.5"              # Random number generators and other randomness functionality. 

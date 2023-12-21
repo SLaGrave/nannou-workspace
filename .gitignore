@@ -7,4 +7,5 @@ images/*.gif
 images/schotter4_frames/
 
 # Keep specific files for README
+!images/catppuccin-schotter.png
 !images/schotter4.gif
