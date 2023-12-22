@@ -1,5 +1,6 @@
 [workspace]
 members=[
+    "promise",
     "catppuccin-schotter",
 
     "sidwellr-schotter/schotter1",
