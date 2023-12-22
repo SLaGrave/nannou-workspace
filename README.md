@@ -2,6 +2,10 @@
 
 A place for my Nannou projects to live.
 
+## [promise](./promise/)
+
+![example image](./images/promise_1.png)
+
 ## [catppuccin-schotter](./catppuccin-schotter/)
 
 After working through the *Schotter Four Ways* tutorial (see below), I decided to try to mess with it and also split some of the code into other modules.
