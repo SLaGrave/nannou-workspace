@@ -27,6 +27,14 @@ fn init(app: &App) -> Model {
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
-fn view(_app: &App, _model: &Model, _frame: Frame) {}
+fn view(app: &App, _model: &Model, frame: Frame) {
+    let draw = app.draw();
+    draw.background().color(BLACK);
+    draw.to_frame(app, &frame).unwrap();
+}
 
-fn key_pressed(_app: &App, _model: &mut Model, _key: Key) {}
+fn key_pressed(_app: &App, _model: &mut Model, key: Key) {
+    match key {
+        _other_key => {}
+    }
+}
