@@ -2,6 +2,10 @@
 
 A place for my Nannou projects to live.
 
+## [flower](./flower/)
+
+![example image](./images/flower_1.png)
+
 ## [promise](./promise/)
 
 ![example image](./images/promise_1.png)
